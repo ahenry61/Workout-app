@@ -15,6 +15,12 @@
     h1, h2 {
       text-align: center;
     }
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
     .day {
       background: white;
       border-radius: 10px;
@@ -45,120 +51,83 @@
 </head>
 
 <body>
-  <h1>8-Week Upper Body Workout Plan</h1>
-  <p style="text-align:center;">Check sets & track weight — auto-saves</p>
 
-  <!-- DAY 1 -->
-  <div class="day">
-    <h2>Day 1 – Push (Chest / Shoulders)</h2>
+<h1>8-Week Upper Body Workout</h1>
 
-    <div class="exercise">
-      <label>Barbell Bench Press – 5x5</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d1-bench-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
+<select id="weekSelector">
+  <option value="1">Week 1</option>
+  <option value="2">Week 2</option>
+  <option value="3">Week 3</option>
+  <option value="4">Week 4</option>
+  <option value="5">Week 5</option>
+  <option value="6">Week 6</option>
+  <option value="7">Week 7</option>
+  <option value="8">Week 8</option>
+</select>
 
-    <div class="exercise">
-      <label>Incline Dumbbell Press – 4x8–10</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d1-incline-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-
-    <div class="exercise">
-      <label>Overhead Press – 4x6–8</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d1-ohp-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 2 -->
-  <div class="day">
-    <h2>Day 2 – Pull (Back Strength)</h2>
-
-    <div class="exercise">
-      <label>Weighted Pull-Ups – 5xAMRAP</label>
-      <div class="sets">
-        <input type="number" placeholder="+lbs" data-key="d2-pullup-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-
-    <div class="exercise">
-      <label>Barbell Row – 4x6–8</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d2-row-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-
-    <div class="exercise">
-      <label>Lat Pulldown – 4x10–12</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d2-lat-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 3 -->
-  <div class="day">
-    <h2>Day 3 – Push (Hypertrophy)</h2>
-
-    <div class="exercise">
-      <label>Machine Chest Press – 4x12</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d3-chest-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-
-    <div class="exercise">
-      <label>Lateral Raises – 5x15</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d3-lateral-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-  </div>
-
-  <!-- DAY 4 -->
-  <div class="day">
-    <h2>Day 4 – Pull (Volume)</h2>
-
-    <div class="exercise">
-      <label>Seated Cable Row – 4x12</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d4-row-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-
-    <div class="exercise">
-      <label>Face Pulls – 4x15</label>
-      <div class="sets">
-        <input type="number" placeholder="lbs" data-key="d4-face-w">
-        <input type="checkbox"><input type="checkbox"><input type="checkbox"><input type="checkbox">
-      </div>
-    </div>
-  </div>
+<div id="workouts"></div>
 
 <script>
-  document.querySelectorAll("input").forEach(input => {
-    const key = input.dataset.key || input.outerHTML;
-    if (localStorage[key]) {
-      if (input.type === "checkbox") input.checked = localStorage[key] === "true";
-      if (input.type === "number") input.value = localStorage[key];
-    }
-    input.addEventListener("change", () => {
-      localStorage[key] = input.type === "checkbox" ? input.checked : input.value;
+  const workoutsHTML = `
+  ${day("Day 1 – Push (Chest / Shoulders)", "d1", [
+    ["Barbell Bench Press – 5x5", 5],
+    ["Incline Dumbbell Press – 4x8–10", 4],
+    ["Overhead Press – 4x6–8", 4]
+  ])}
+  ${day("Day 2 – Pull (Back Strength)", "d2", [
+    ["Weighted Pull-Ups – 5xAMRAP", 5],
+    ["Barbell Row – 4x6–8", 4],
+    ["Lat Pulldown – 4x10–12", 4]
+  ])}
+  ${day("Day 3 – Push (Hypertrophy)", "d3", [
+    ["Machine Chest Press – 4x12", 4],
+    ["Lateral Raises – 5x15", 5]
+  ])}
+  ${day("Day 4 – Pull (Volume)", "d4", [
+    ["Seated Cable Row – 4x12", 4],
+    ["Face Pulls – 4x15", 4]
+  ])}
+  `;
+
+  function day(title, prefix, exercises) {
+    return `
+    <div class="day">
+      <h2>${title}</h2>
+      ${exercises.map(([name, sets]) => `
+        <div class="exercise">
+          <label>${name}</label>
+          <div class="sets">
+            <input type="number" placeholder="lbs" data-key="${prefix}-${name}-w">
+            ${Array(sets).fill(`<input type="checkbox">`).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </div>`;
+  }
+
+  const container = document.getElementById("workouts");
+  const weekSelector = document.getElementById("weekSelector");
+
+  function loadWeek(week) {
+    container.innerHTML = workoutsHTML;
+    document.querySelectorAll("input").forEach(input => {
+      const baseKey = input.dataset.key || input.outerHTML;
+      const key = `week${week}-${baseKey}`;
+      if (localStorage[key]) {
+        if (input.type === "checkbox") input.checked = localStorage[key] === "true";
+        if (input.type === "number") input.value = localStorage[key];
+      }
+      input.addEventListener("change", () => {
+        localStorage[key] = input.type === "checkbox" ? input.checked : input.value;
+      });
     });
+  }
+
+  weekSelector.addEventListener("change", e => {
+    loadWeek(e.target.value);
   });
+
+  loadWeek(1);
 </script>
 
 </body>

@@ -57,114 +57,119 @@ input[type="checkbox"] {
 <h1>8-Week Upper Body Workout</h1>
 
 <select id="weekSelector">
-  <option value="1">Week 1</option>
-  <option value="2">Week 2</option>
-  <option value="3">Week 3</option>
-  <option value="4">Week 4</option>
-  <option value="5">Week 5</option>
-  <option value="6">Week 6</option>
-  <option value="7">Week 7</option>
-  <option value="8">Week 8</option>
+  ${[1,2,3,4,5,6,7,8].map(w => `<option value="${w}">Week ${w}</option>`).join("")}
 </select>
 
 <div class="phase" id="phaseLabel"></div>
 <div id="workouts"></div>
 
 <script>
-const phase1 = {
+function lift(barbell, dumbbell, week) {
+  return week % 2 === 1 ? dumbbell : barbell;
+}
+
+const phase1 = week => ({
   label: "Phase 1 – Strength & Base Hypertrophy",
   days: [
     {
       title: "Day 1 – Push (Chest Dominant)",
       exercises: [
-        ["Barbell Bench Press", 5],
-        ["Incline Barbell Press", 4],
-        ["Cable Fly", 3],
-        ["Overhead Press", 4],
-        ["Lateral Raises", 4]
+        [lift("Barbell Bench Press","Dumbbell Bench Press",week),5],
+        [lift("Incline Barbell Press","Incline Dumbbell Press",week),4],
+        ["Cable Fly",3],
+        [lift("Overhead Press","Dumbbell Overhead Press",week),4],
+        ["Dumbbell Front Raise",3],
+        ["Lateral Raises",4]
       ]
     },
     {
       title: "Day 2 – Pull (Back Strength)",
       exercises: [
-        ["Weighted Pull-Ups", 5],
-        ["Barbell Row", 4],
-        ["Chest-Supported Row", 3],
-        ["Lat Pulldown", 3],
-        ["Rear Delt Fly", 3]
+        ["Weighted Pull-Ups",5],
+        [lift("Barbell Row","Dumbbell Row",week),4],
+        ["Lat Pulldown",3],
+        ["Rear Delt Fly",3],
+        ["Hammer Curl",3]
       ]
     },
     {
       title: "Day 3 – Push (Shoulders / Hypertrophy)",
       exercises: [
-        ["Seated Dumbbell Press", 4],
-        ["Incline Dumbbell Press", 4],
-        ["Lateral Raise (Strict)", 5],
-        ["Cable Fly (Low to High)", 3]
+        [lift("Seated Barbell Press","Seated Dumbbell Press",week),4],
+        [lift("Incline Barbell Press","Incline Dumbbell Press",week),4],
+        ["Front → Lateral Raise Split",5],
+        ["Diamond Push-Ups",3],
+        ["Cable Fly (Low to High)",3]
       ]
     },
     {
       title: "Day 4 – Pull (Back Volume)",
       exercises: [
-        ["Deadlift or RDL", 4],
-        ["Seated Cable Row", 4],
-        ["Neutral-Grip Pulldown", 3],
-        ["Face Pull", 4]
+        [lift("Deadlift","RDL",week),4],
+        ["Seated Cable Row",4],
+        ["Neutral-Grip Pulldown",3],
+        ["Shoulder Shrugs",4],
+        ["Dumbbell Curl to Press",3],
+        ["Hanging Knee Raises",3]
       ]
     }
   ]
-};
+});
 
-const phase2 = {
+const phase2 = week => ({
   label: "Phase 2 – Volume, Intensity & Overload",
   days: [
     {
       title: "Day 1 – Push (Chest Overload)",
       exercises: [
-        ["Barbell Bench Press (Top + Backoff)", 6],
-        ["Incline Dumbbell Press", 4],
-        ["Cable Fly (Slow Tempo)", 4],
-        ["Overhead Press", 4],
-        ["Lateral Raise Drop Set", 5]
+        [lift("Barbell Bench Press","Dumbbell Bench Press",week),6],
+        ["Incline Dumbbell Press",4],
+        ["Cable Fly (Slow Tempo)",4],
+        [lift("Overhead Press","Dumbbell Overhead Press",week),4],
+        ["Lateral Raise Drop Set",5],
+        ["Shoulder Rotations",3]
       ]
     },
     {
       title: "Day 2 – Pull (Back Thickness)",
       exercises: [
-        ["Weighted Pull-Ups", 6],
-        ["Barbell Row (Paused)", 4],
-        ["Chest-Supported Row", 4],
-        ["Straight-Arm Pulldown", 3],
-        ["Rear Delt Fly", 4]
+        ["Weighted Pull-Ups",6],
+        [lift("Barbell Row","Dumbbell Row",week),4],
+        ["Inverted Rows",4],
+        ["Straight-Arm Pulldown",3],
+        ["Rear Delt Fly",4]
       ]
     },
     {
       title: "Day 3 – Push (Hypertrophy Burn)",
       exercises: [
-        ["Machine Chest Press", 4],
-        ["Incline Dumbbell Press", 4],
-        ["Lateral Raise (High Rep)", 6],
-        ["Cable Fly Burnout", 3]
+        ["Machine Chest Press",4],
+        ["Incline Dumbbell Press",4],
+        ["Lateral Raise (High Rep)",6],
+        ["Pike Push-Ups",3],
+        ["Cable Fly Burnout",3]
       ]
     },
     {
       title: "Day 4 – Pull (Volume & Finishers)",
       exercises: [
-        ["RDL", 4],
-        ["Seated Cable Row (Slow)", 4],
-        ["Wide-Grip Pulldown", 4],
-        ["Face Pull + Shrug", 4]
+        ["RDL",4],
+        ["Seated Cable Row (Slow)",4],
+        ["Wide-Grip Pulldown",4],
+        ["Shrugs",4],
+        ["Pull-Ups (Max Reps)",3],
+        ["Hanging Knee Raises",3]
       ]
     }
   ]
-};
+});
 
 const container = document.getElementById("workouts");
 const phaseLabel = document.getElementById("phaseLabel");
 const weekSelector = document.getElementById("weekSelector");
 
 function renderWeek(week) {
-  const phase = week <= 4 ? phase1 : phase2;
+  const phase = week <= 4 ? phase1(week) : phase2(week);
   phaseLabel.textContent = phase.label;
   container.innerHTML = "";
 
@@ -180,18 +185,18 @@ function renderWeek(week) {
       const row = document.createElement("div");
       row.className = "set-row";
 
+      const wKey = `w${week}-d${dIdx}-e${eIdx}-w`;
       const weight = document.createElement("input");
       weight.type = "number";
       weight.placeholder = "lbs";
-      const wKey = `w${week}-d${dIdx}-e${eIdx}-w`;
       weight.value = localStorage[wKey] || "";
       weight.onchange = () => localStorage[wKey] = weight.value;
       row.appendChild(weight);
 
       for (let i = 0; i < sets; i++) {
+        const cKey = `w${week}-d${dIdx}-e${eIdx}-s${i}`;
         const cb = document.createElement("input");
         cb.type = "checkbox";
-        const cKey = `w${week}-d${dIdx}-e${eIdx}-s${i}`;
         cb.checked = localStorage[cKey] === "true";
         cb.onchange = () => localStorage[cKey] = cb.checked;
         row.appendChild(cb);

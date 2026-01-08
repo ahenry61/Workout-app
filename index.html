@@ -1,53 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>8-Week Upper Body Workout Plan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8-Week Upper Body Workout</title>
 
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 16px;
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 16px;
-    }
-    .day {
-      background: white;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .exercise {
-      margin-bottom: 12px;
-    }
-    label {
-      font-weight: 600;
-    }
-    .sets {
-      display: flex;
-      gap: 8px;
-      margin: 6px 0;
-      flex-wrap: wrap;
-    }
-    .sets input[type="checkbox"] {
-      transform: scale(1.2);
-    }
-    input[type="number"] {
-      width: 70px;
-      padding: 4px;
-    }
-  </style>
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f4f4;
+  padding: 16px;
+}
+h1, h2 {
+  text-align: center;
+}
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+.day {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.exercise {
+  margin-bottom: 12px;
+}
+label {
+  font-weight: 600;
+}
+.set-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+input[type="number"] {
+  width: 70px;
+}
+input[type="checkbox"] {
+  transform: scale(1.2);
+}
+.phase {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+</style>
 </head>
 
 <body>
@@ -65,69 +67,146 @@
   <option value="8">Week 8</option>
 </select>
 
+<div class="phase" id="phaseLabel"></div>
 <div id="workouts"></div>
 
 <script>
-  const workoutsHTML = `
-  ${day("Day 1 – Push (Chest / Shoulders)", "d1", [
-    ["Barbell Bench Press – 5x5", 5],
-    ["Incline Dumbbell Press – 4x8–10", 4],
-    ["Overhead Press – 4x6–8", 4]
-  ])}
-  ${day("Day 2 – Pull (Back Strength)", "d2", [
-    ["Weighted Pull-Ups – 5xAMRAP", 5],
-    ["Barbell Row – 4x6–8", 4],
-    ["Lat Pulldown – 4x10–12", 4]
-  ])}
-  ${day("Day 3 – Push (Hypertrophy)", "d3", [
-    ["Machine Chest Press – 4x12", 4],
-    ["Lateral Raises – 5x15", 5]
-  ])}
-  ${day("Day 4 – Pull (Volume)", "d4", [
-    ["Seated Cable Row – 4x12", 4],
-    ["Face Pulls – 4x15", 4]
-  ])}
-  `;
+const phase1 = {
+  label: "Phase 1 – Strength & Base Hypertrophy",
+  days: [
+    {
+      title: "Day 1 – Push (Chest Dominant)",
+      exercises: [
+        ["Barbell Bench Press", 5],
+        ["Incline Barbell Press", 4],
+        ["Cable Fly", 3],
+        ["Overhead Press", 4],
+        ["Lateral Raises", 4]
+      ]
+    },
+    {
+      title: "Day 2 – Pull (Back Strength)",
+      exercises: [
+        ["Weighted Pull-Ups", 5],
+        ["Barbell Row", 4],
+        ["Chest-Supported Row", 3],
+        ["Lat Pulldown", 3],
+        ["Rear Delt Fly", 3]
+      ]
+    },
+    {
+      title: "Day 3 – Push (Shoulders / Hypertrophy)",
+      exercises: [
+        ["Seated Dumbbell Press", 4],
+        ["Incline Dumbbell Press", 4],
+        ["Lateral Raise (Strict)", 5],
+        ["Cable Fly (Low to High)", 3]
+      ]
+    },
+    {
+      title: "Day 4 – Pull (Back Volume)",
+      exercises: [
+        ["Deadlift or RDL", 4],
+        ["Seated Cable Row", 4],
+        ["Neutral-Grip Pulldown", 3],
+        ["Face Pull", 4]
+      ]
+    }
+  ]
+};
 
-  function day(title, prefix, exercises) {
-    return `
-    <div class="day">
-      <h2>${title}</h2>
-      ${exercises.map(([name, sets]) => `
-        <div class="exercise">
-          <label>${name}</label>
-          <div class="sets">
-            <input type="number" placeholder="lbs" data-key="${prefix}-${name}-w">
-            ${Array(sets).fill(`<input type="checkbox">`).join("")}
-          </div>
-        </div>
-      `).join("")}
-    </div>`;
-  }
+const phase2 = {
+  label: "Phase 2 – Volume, Intensity & Overload",
+  days: [
+    {
+      title: "Day 1 – Push (Chest Overload)",
+      exercises: [
+        ["Barbell Bench Press (Top + Backoff)", 6],
+        ["Incline Dumbbell Press", 4],
+        ["Cable Fly (Slow Tempo)", 4],
+        ["Overhead Press", 4],
+        ["Lateral Raise Drop Set", 5]
+      ]
+    },
+    {
+      title: "Day 2 – Pull (Back Thickness)",
+      exercises: [
+        ["Weighted Pull-Ups", 6],
+        ["Barbell Row (Paused)", 4],
+        ["Chest-Supported Row", 4],
+        ["Straight-Arm Pulldown", 3],
+        ["Rear Delt Fly", 4]
+      ]
+    },
+    {
+      title: "Day 3 – Push (Hypertrophy Burn)",
+      exercises: [
+        ["Machine Chest Press", 4],
+        ["Incline Dumbbell Press", 4],
+        ["Lateral Raise (High Rep)", 6],
+        ["Cable Fly Burnout", 3]
+      ]
+    },
+    {
+      title: "Day 4 – Pull (Volume & Finishers)",
+      exercises: [
+        ["RDL", 4],
+        ["Seated Cable Row (Slow)", 4],
+        ["Wide-Grip Pulldown", 4],
+        ["Face Pull + Shrug", 4]
+      ]
+    }
+  ]
+};
 
-  const container = document.getElementById("workouts");
-  const weekSelector = document.getElementById("weekSelector");
+const container = document.getElementById("workouts");
+const phaseLabel = document.getElementById("phaseLabel");
+const weekSelector = document.getElementById("weekSelector");
 
-  function loadWeek(week) {
-    container.innerHTML = workoutsHTML;
-    document.querySelectorAll("input").forEach(input => {
-      const baseKey = input.dataset.key || input.outerHTML;
-      const key = `week${week}-${baseKey}`;
-      if (localStorage[key]) {
-        if (input.type === "checkbox") input.checked = localStorage[key] === "true";
-        if (input.type === "number") input.value = localStorage[key];
+function renderWeek(week) {
+  const phase = week <= 4 ? phase1 : phase2;
+  phaseLabel.textContent = phase.label;
+  container.innerHTML = "";
+
+  phase.days.forEach((day, dIdx) => {
+    const dayDiv = document.createElement("div");
+    dayDiv.className = "day";
+    dayDiv.innerHTML = `<h2>${day.title}</h2>`;
+
+    day.exercises.forEach(([name, sets], eIdx) => {
+      const ex = document.createElement("div");
+      ex.className = "exercise";
+      ex.innerHTML = `<label>${name}</label>`;
+      const row = document.createElement("div");
+      row.className = "set-row";
+
+      const weight = document.createElement("input");
+      weight.type = "number";
+      weight.placeholder = "lbs";
+      const wKey = `w${week}-d${dIdx}-e${eIdx}-w`;
+      weight.value = localStorage[wKey] || "";
+      weight.onchange = () => localStorage[wKey] = weight.value;
+      row.appendChild(weight);
+
+      for (let i = 0; i < sets; i++) {
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        const cKey = `w${week}-d${dIdx}-e${eIdx}-s${i}`;
+        cb.checked = localStorage[cKey] === "true";
+        cb.onchange = () => localStorage[cKey] = cb.checked;
+        row.appendChild(cb);
       }
-      input.addEventListener("change", () => {
-        localStorage[key] = input.type === "checkbox" ? input.checked : input.value;
-      });
+
+      ex.appendChild(row);
+      dayDiv.appendChild(ex);
     });
-  }
 
-  weekSelector.addEventListener("change", e => {
-    loadWeek(e.target.value);
+    container.appendChild(dayDiv);
   });
+}
 
-  loadWeek(1);
+weekSelector.onchange = e => renderWeek(+e.target.value);
+renderWeek(1);
 </script>
 
 </body>
